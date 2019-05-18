@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        /* Helpers */
+        .flex {
+            display: flex; flex-grow: 0; flex-shrink: 1;
+        }
+        .flex-col {
+            display: flex; flex-grow: 0; flex-shrink: 1;
+            flex-direction: column;
+        }
+        .flex-grow { flex-grow: 1; }
+        .flex-no-shrink { flex-shrink: 0; }
+        .large-content { 
+            flex-shrink: 0;
+            width: 1000px; 
+            height: 1000px;
+            background: lightgrey; 
+            padding: 1rem;
+            border: 2px solid silver;
+            box-sizing: border-box;   
+        }       
+        .hide-large-content #page-container .large-content { display: none; }
+        .scrollable { overflow: scroll; }
+        .hide-vert-scrollbar { overflow-y: hidden !important; }
+        /* General Styling */
+        body, html {
+            margin: 0;
+            padding: 0;
+            background: lightslategray;
+        }
+        #navigation {
+            position: fixed; top: 0; left: -100px; bottom: 0;        
+            background: darkslateblue;
+            width: 100px; 
+            box-shadow: 0 0 5px black;
+            transition: left ease-in-out 0.3s, top ease-in-out 0.3s;
+        }
+        .header-visible #navigation { top: 50px; /* Header height */ }
+        .navigation-opened #navigation, .navigation-opened-inside #navigation { left: 0; }
+        #header {
+            position: fixed; top: -50px; right: 0; left: 0;
+            background: lightcoral;
+            box-shadow: 0 0 5px black;
+            padding: 1rem;
+            box-sizing: border-box;   
+            height: 50px; /* Header height */         
+            transition: top ease-in-out 0.3s;
+        }
+        .header-visible #header { top: 0; }
+        #sidebar {
+            position: fixed; top: 0; right: -100px; bottom: 0;
+            transition: right ease-in-out 0.3s;
+            background: darkgoldenrod; 
+            width: 100px; 
+            box-shadow: 0 0 5px black;
+            transition: top ease-in-out 0.3s, right ease-in-out 0.3s;
+        }
+        .header-visible #sidebar { top: 50px; /* Header height */ }
+        .sidebar-opened #sidebar { right: 0; }
+        #pages-container { background: darkorchid; }
+        #page-container {
+            background: lightskyblue;
+            box-sizing: border-box;
+            padding: 1rem; margin: 0 1rem 1rem 1rem;
+            box-shadow: 0 0 5px black;                
+            transition: margin-top ease-in-out 0.3s;
+        }
+        .header-visible #page-container { margin-top: 50px; /* Header height */ }
+        body { transition: padding-left ease-in-out 0.3s; }
+        .navigation-opened-inside body { padding-left: 100px; }
+        button { flex-shrink: 0; margin-bottom: 0.25rem; }
+
+        /* Layout */  
+        body, html {
+            height: 100%;          
+            overflow: hidden;
+        } 
+        #pages-container {
+            /* Only in chrome works without this, other browsers 
+            will hide the vertical scrollbar */
+            overflow: hidden;
+        }
+        body #page-container {
+            overflow-y: scroll; /* With AUTO does not work */
+            overflow-x: auto;
+        }
+        .scrollable-body,
+        .scrollable-body body,
+        .scrollable-body body #pages-container,
+        .scrollable-body body #page-container {
+            height: auto;
+            overflow-y: visible;
+        } 
+    </style>
+</head>
+
+<body class="flex-col">
+    <div id="navigation" class="flex-col">
+        <h2 class="flex-no-shrink">Logo</h2>
+        <div class="flex-grow scrollable">            
+            <div class="large-content">Navigation</div>
+        </div>
+    </div>
+    <div id="sidebar" class="flex-col">
+        <h2 class="flex-no-shrink">Title</h2>
+        <div class="flex-grow scrollable">            
+            <div class="large-content">Content</div>
+        </div>
+    </div>
+    <div id="header">
+        Header
+    </div>
+
+    <div id="pages-container" class="flex-grow flex-col">
+        <div id="page-container" class="flex-grow flex-col">
+            <h1>Content</h1>
+            <button onclick="toggleClass('header-visible');">
+                Toggle Header
+            </button>
+            <button onclick="toggleClass('navigation-opened'); removeClass('navigation-opened-inside');">
+                Toggle Navigation
+            </button>
+            <button onclick="toggleClass('navigation-opened-inside'); removeClass('navigation-opened');">
+                Toggle Navigation not overlapping
+            </button>
+            <button onclick="toggleClass('sidebar-opened');">
+                Toggle Sidebar
+            </button>
+            <button onclick="toggleClass('scrollable-body');">
+                Toggle Vertical Body Scroll
+            </button>
+            <button onclick="toggleClass('sidebar-opened'); toggleClass('hide-vert-scrollbar') && resetScrollTop();">
+                Toggle Sidebar Body without body scrollbar (if Vertical Body Scroll is enabled)
+            </button>
+            <button onclick="toggleClass('hide-large-content');">
+                Toggle Large Content In Page
+            </button>
+            <div class="large-content">
+                Large Content
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        var root = document.getElementsByTagName('html')[0];
+        function toggleClass(name) { 
+            return root.classList.toggle(name);
+        }
+        function removeClass(name) { 
+            return root.classList.remove(name);
+        }
+        function resetScrollTop() { 
+            root.scrollTop = 0;
+        }
+    </script>
+</body>
+
+</html>
