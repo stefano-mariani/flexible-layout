@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        /* Helper Classes */
+        .flex { display: flex; flex-grow: 0; flex-shrink: 1; }
+        .flex-col { display: flex; flex-grow: 0; flex-shrink: 1; flex-direction: column; }
+        .flex-grow { flex-grow: 1; }
+        .flex-no-shrink { flex-shrink: 0; }
+        .hide-table table { display: none; }
+        .scrollable { overflow: scroll; }
+    </style>
+    <style>
+        /* General Styling */
+        body, html { margin: 0; padding: 0; background: lightslategray; }
+        #navigation { position: fixed; top: 0; left: -100px; bottom: 0; background: darkslateblue; width: 100px; box-shadow: 0 0 5px black; transition: left ease-in-out 0.3s, top ease-in-out 0.3s; }
+        #header { position: fixed; top: -50px; right: 0; left: 0; background: lightcoral; box-shadow: 0 0 5px black; padding: 1rem; box-sizing: border-box; height: 50px; /* Header height */ transition: top ease-in-out 0.3s; }
+        #sidebar { position: fixed; top: 0; right: -100px; bottom: 0; transition: right ease-in-out 0.3s; background: darkgoldenrod;  width: 100px;  box-shadow: 0 0 5px black; transition: top ease-in-out 0.3s, right ease-in-out 0.3s; }
+        #pages-container {  background: darkorchid; transition: padding-top ease-in-out 0.3s, padding-left ease-in-out 0.3s; }
+        #page-container { background: lightskyblue; box-sizing: border-box; padding: 1rem; margin: 0 1rem 1rem 1rem; box-shadow: 0 0 5px black; }
+        button { flex-shrink: 0; margin-bottom: 0.25rem; }
+        .large-content { flex-shrink: 0; width: 1000px;  height: 1000px; background: lightgrey;  padding: 1rem; border: 2px solid silver; box-sizing: border-box; }
+    </style>
+    <style>
+        /* Toggles */
+        .header-visible #sidebar { top: 50px; /* Header height */ }
+        .header-visible #header { top: 0; }
+        .header-visible #pages-container { padding-top: 50px; /* Header height */ }
+        .header-visible #navigation { top: 50px; /* Header height */ }
+        .navigation-opened #navigation, .navigation-opened-inside #navigation { left: 0; }
+        .navigation-opened-inside #pages-container { padding-left: 100px; }
+        .sidebar-opened #sidebar, .sidebar-opened-noscroll #sidebar { right: 0; }
+        .sidebar-opened-noscroll { overflow-y: hidden !important; }
+    </style>
+    <style>
+        /* Layout */  
+        body, html {
+            position: absolute; 
+            left: 0; top: 0; right: 0; bottom: 0;
+            overflow: hidden;
+        } 
+        #pages-container {
+            height: 100%;
+        }
+        #page-container {
+            overflow: auto;
+        }
+        .scrollable-body #pages-container {
+            bottom: auto;
+            min-height: 100vh;
+        }
+        .scrollable-body,
+        .scrollable-body body
+        {
+            position: relative;
+            overflow: auto;
+            min-height: 100vh;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="pages-container" class="flex-col"> <!-- ui-view -->
+        <div id="page-container" class="flex-grow flex-col">
+            <h1>Content</h1>
+            <button onclick="toggleClass('header-visible');">
+                Toggle Header
+            </button>
+            <button onclick="toggleClass('navigation-opened'); removeClass('navigation-opened-inside');">
+                Toggle Left Navigation
+            </button>
+            <button onclick="toggleClass('navigation-opened-inside'); removeClass('navigation-opened');">
+                Toggle Left Navigation (not overlapping)
+            </button>
+            <button onclick="toggleClass('sidebar-opened');">
+                Toggle Right Sidebar
+            </button>
+            <button onclick="toggleClass('scrollable-body');">
+                Toggle Body/Content Scroll
+            </button>
+            <button onclick="toggleClass('sidebar-opened-noscroll') && resetScrollTop();">
+                Toggle Right Sidebar without body scrollbar (if Body Scroll is enabled)
+            </button>
+            <button onclick="toggleClass('hide-table');">
+                Toggle Table
+            </button>
+            <table class="flex-grow flex-col" style="overflow: auto; table-layout: fixed; min-height: 5rem;">
+                <thead class="flex-no-shrink">
+                    <tr class="flex-no-shrink flex">
+                        <th class="flex-grow">Header #1</th>
+                        <th class="flex-grow">Header #2</th>
+                    </tr>
+                </thead>
+                <tbody class="flex-grow" style="overflow: auto;">
+                    <script>for(i=0;i<=30;i++)document.write('<tr class="flex"><td style="width: 50%">Data #1</td><td style="width: 50%">Data #2</td></tr>')</script>
+                </tbody>                
+            </table>
+        </div>
+    </div>
+    
+    <div id="navigation" class="flex-col">
+        <h2 class="flex-no-shrink">Logo</h2>
+        <div class="flex-grow scrollable">            
+            <div class="large-content">Navigation</div>
+        </div>
+    </div>
+    <div id="sidebar" class="flex-col">
+        <h2 class="flex-no-shrink">Title</h2>
+        <div class="flex-grow scrollable">            
+            <div class="large-content">Content</div>
+        </div>
+    </div>
+    <div id="header">
+        Header
+    </div>
+
+    <script>
+        var root = document.getElementsByTagName('html')[0];
+        function toggleClass(name) { 
+            return root.classList.toggle(name);
+        }
+        function removeClass(name) { 
+            return root.classList.remove(name);
+        }
+        function resetScrollTop() { 
+            root.scrollTop = 0;
+        }
+    </script>
+</body>
+
+</html>
